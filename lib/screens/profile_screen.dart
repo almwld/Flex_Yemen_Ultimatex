@@ -1,3 +1,4 @@
+import "wallet_screen.dart";
 import 'package:flutter/material.dart';
 import 'order_tracking_screen.dart';
 import 'add_product_screen.dart';
@@ -49,7 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _buildSettingItem(Icons.dark_mode, "وضع المظهر (Dark Mode)", 
                   trailing: Switch(value: isDarkMode, activeColor: const Color(0xFFD4AF37), onChanged: (val) => setState(() => isDarkMode = val))),
               _buildSettingItem(Icons.language, "لغة التطبيق", subtitle: "العربية (اليمن)"),
-              _buildSettingItem(Icons.help_outline, "مركز المساعدة (واتساب)", color: Colors.green, onTap: () {}),
+              _buildSettingItem(Icons.help_outline, "مركز المساعدة (واتساب)", color: Colors.green, onTap: () { // منطق الواتساب هنا }),
               _buildSettingItem(Icons.info_outline, "حول فلكس يمن", subtitle: "الإصدار V3.0.0"),
               _buildSettingItem(Icons.logout, "تسجيل الخروج", color: Colors.redAccent, onTap: () {}),
               
@@ -97,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _quickTile(context, Icons.track_changes, "تتبع طلباتي", () => Navigator.push(context, MaterialPageRoute(builder: (context) => const OrderTrackingScreen()))),
-          _quickTile(context, Icons.account_balance_wallet_outlined, "محفظتي", () {}),
+          _quickTile(context, Icons.account_balance_wallet_outlined, "محفظتي", () => Navigator.push(context, MaterialPageRoute(builder: (context) => const WalletScreen()))),
           _quickTile(context, Icons.shopping_cart_outlined, "السلة", () => Navigator.push(context, MaterialPageRoute(builder: (context) => const CartScreen()))),
           _quickTile(context, Icons.favorite_border, "المفضلة", () {}),
         ],
