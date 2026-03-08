@@ -1,3 +1,4 @@
+import "screens/maps_explorer_screen.dart";
 import "screens/add_product_screen.dart";
 import "screens/notifications_screen.dart";
 import "screens/cart_screen.dart";
