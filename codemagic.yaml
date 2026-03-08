@@ -8,13 +8,12 @@ workflows:
     scripts:
       - name: Hard Reset & Setup Folders
         script: | 
-          # إنشاء الهيكل الرسمي أولاً
           flutter create . --platforms android --org com.almwld --project-name flex_yemen
           mkdir -p lib/screens
           
       - name: Verify Flutter & Build
         script: | 
-          # التأكد من صلاحيات الإنترنت والمانيفست
+          # كتابة المانيفست مع تعريف الـ v2 embedding لإنهاء الخطأ
           cat << 'MANIFEST' > android/app/src/main/AndroidManifest.xml
           <manifest xmlns:android="http://schemas.android.com/apk/res/android"
               package="com.almwld.flex_yemen">
@@ -32,6 +31,9 @@ workflows:
                           <category android:name="android.intent.category.LAUNCHER"/>
                       </intent-filter>
                   </activity>
+                  <meta-data
+                      android:name="flutterEmbedding"
+                      android:value="2" />
               </application>
           </manifest>
           MANIFEST
