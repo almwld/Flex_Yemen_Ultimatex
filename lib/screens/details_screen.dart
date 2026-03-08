@@ -20,7 +20,6 @@ class DetailsScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       body: CustomScrollView(
         slivers: [
-          // رأس الصفحة مع صورة العرض
           SliverAppBar(
             expandedHeight: 300,
             backgroundColor: Colors.black,
@@ -35,14 +34,12 @@ class DetailsScreen extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
             ),
           ),
-          
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // العنوان والسعر
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -53,8 +50,6 @@ class DetailsScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  
-                  // الموقع والتقييم
                   Row(
                     children: [
                       const Icon(Icons.location_on, color: Colors.grey, size: 16),
@@ -64,17 +59,11 @@ class DetailsScreen extends StatelessWidget {
                       const Text(" 4.9 (١٢٠ تقييم)", style: TextStyle(color: Colors.grey, fontSize: 12)),
                     ],
                   ),
-                  
                   const Divider(color: Colors.white10, height: 40),
-                  
-                  // تفاصيل العرض
                   const Text("تفاصيل العرض", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                   const SizedBox(height: 10),
                   Text(description, style: const TextStyle(color: Colors.white70, height: 1.6)),
-                  
                   const SizedBox(height: 30),
-                  
-                  // أزرار التفاعل
                   _buildActionButtons(),
                 ],
               ),
@@ -82,7 +71,6 @@ class DetailsScreen extends StatelessWidget {
           ),
         ],
       ),
-      // زر الطلب السفلي الثابت
       bottomNavigationBar: _buildBottomOrderBar(),
     );
   }
@@ -121,13 +109,17 @@ class DetailsScreen extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFFD4AF37),
           minimumSize: const Size(double.infinity, 50),
-          shape: RoundedRectangle_circular(15),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         ),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.shopping_cart_checkout), SizedBox(width: 10), Text("إضافة للسلة")]),, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.shopping_cart_checkout, color: Colors.black),
+            SizedBox(width: 10),
+            Text("إضافة للسلة", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+          ],
+        ),
       ),
     );
   }
-  
-  // تصحيح بسيط لشكل الحواف
-  RoundedRectangleBorder RoundedRectangle_circular(double r) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(r));
 }
