@@ -1,32 +1,68 @@
-import "screens/maps_explorer_screen.dart";
-import "screens/add_product_screen.dart";
-import "screens/notifications_screen.dart";
-import "screens/cart_screen.dart";
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
-import 'screens/map_screen.dart';
-import 'screens/store_screen.dart';
-import 'screens/wallet_screen.dart';
 import 'screens/chat_screen.dart';
 import 'screens/profile_screen.dart';
+import 'screens/wallet_screen.dart';
 
-void main() => runApp(const FlexYemenApp());
+void main() {
+  runApp(const FlexYemenApp());
+}
 
 class FlexYemenApp extends StatelessWidget {
   const FlexYemenApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Flex Yemen',
       debugShowCheckedModeBanner: false,
-      title: 'Flex Yemen V2', // اسم النسخة الجديدة
+      themeMode: ThemeMode.system, // المكان الصحيح هنا
       theme: ThemeData(
-        brightness: Brightness.dark, themeMode: ThemeMode.system,
+        primarySwatch: Colors.amber,
+        brightness: Brightness.light,
+        useMaterial3: true,
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
         scaffoldBackgroundColor: Colors.black,
-        primaryColor: const Color(0xFFD4AF37),
+        useMaterial3: true,
       ),
       home: const MainNavigation(),
     );
   }
 }
 
-// ... بقية كود MainNavigation (نفس السابق)
+class MainNavigation extends StatefulWidget {
+  const MainNavigation({super.key});
+
+  @override
+  State<MainNavigation> createState() => _MainNavigationState();
+}
+
+class _MainNavigationState extends State<MainNavigation> {
+  int _currentIndex = 0;
+  final List<Widget> _screens = [
+    const HomeScreen(),
+    const ChatScreen(),
+    const ProfileScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        selectedItemColor: const Color(0xFFD4AF37),
+        unselectedItemColor: Colors.grey,
+        backgroundColor: const Color(0xFF1A1A1A),
+        onTap: (index) => setState(() => _currentIndex = index),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
+          BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'الدردشة'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'حسابي'),
+        ],
+      ),
+    );
+  }
+}
