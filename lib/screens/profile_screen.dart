@@ -1,3 +1,4 @@
+import "order_tracking_screen.dart";
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -22,6 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             
             // قسم إعدادات التطبيق
             _buildSectionTitle("إعدادات المنصة والتطبيق"),
+_buildSettingTile(Icons.track_changes, "تتبع طلباتي الحالية", onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const OrderTrackingScreen()))),
             _buildSettingTile(Icons.dark_mode, "تبديل المظهر (ثيم)", 
               trailing: Switch(value: isDarkMode, onChanged: (val) => setState(() => isDarkMode = val))),
             

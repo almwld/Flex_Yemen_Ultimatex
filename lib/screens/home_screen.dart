@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _buildProductBanners(),
             
             const SizedBox(height: 20),
-            const Text("بناء: Flex_Ultimate_V2.6.0_Merchant_Upload", style: TextStyle(color: Colors.white10, fontSize: 10)),
+            const Text("بناء: Flex_Ultimate_V2.7.0_Order_Tracking", style: TextStyle(color: Colors.white10, fontSize: 10)),
           ],
         ),
       ),
