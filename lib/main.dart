@@ -18,7 +18,7 @@ class FlexYemenApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flex Yemen V2', // اسم النسخة الجديدة
       theme: ThemeData(
-        brightness: Brightness.dark,
+        brightness: Brightness.dark, themeMode: ThemeMode.system,
         scaffoldBackgroundColor: Colors.black,
         primaryColor: const Color(0xFFD4AF37),
       ),
