@@ -123,7 +123,7 @@ class DetailsScreen extends StatelessWidget {
           minimumSize: const Size(double.infinity, 50),
           shape: RoundedRectangle_circular(15),
         ),
-        child: const Text("اطلب الآن (توصيل سريع)", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.shopping_cart_checkout), SizedBox(width: 10), Text("إضافة للسلة")]),, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
       ),
     );
   }
