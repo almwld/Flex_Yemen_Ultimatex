@@ -1,8 +1,8 @@
-import "wallet_screen.dart";
 import 'package:flutter/material.dart';
 import 'order_tracking_screen.dart';
 import 'add_product_screen.dart';
 import 'cart_screen.dart';
+import 'wallet_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -20,7 +20,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: isDarkMode ? Colors.black : Colors.grey[100],
       body: CustomScrollView(
         slivers: [
-          // رأس الصفحة الاحترافي
           SliverAppBar(
             expandedHeight: 200,
             backgroundColor: const Color(0xFF1A1A1A),
@@ -28,34 +27,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
               background: _buildHeader(context),
             ),
           ),
-          
           SliverList(
             delegate: SliverChildListDelegate([
               const SizedBox(height: 20),
-              
-              // قسم "نشاطي المالي والتجاري"
               _buildSectionTitle("نشاطي"),
               _buildActionGrid(context),
-              
               const SizedBox(height: 25),
-              
-              // قسم "أدوات التاجر"
               _buildSectionTitle("مركز التجار"),
               _buildMerchantCard(context),
-              
               const SizedBox(height: 25),
-              
-              // قسم "الإعدادات والدعم"
               _buildSectionTitle("الإعدادات والنظام"),
-              _buildSettingItem(Icons.dark_mode, "وضع المظهر (Dark Mode)", 
-                  trailing: Switch(value: isDarkMode, activeColor: const Color(0xFFD4AF37), onChanged: (val) => setState(() => isDarkMode = val))),
+              _buildSettingItem(
+                Icons.dark_mode, 
+                "وضع المظهر (Dark Mode)", 
+                trailing: Switch(
+                  value: isDarkMode, 
+                  activeColor: const Color(0xFFD4AF37), 
+                  onChanged: (val) => setState(() => isDarkMode = val),
+                ),
+              ),
               _buildSettingItem(Icons.language, "لغة التطبيق", subtitle: "العربية (اليمن)"),
-              _buildSettingItem(Icons.help_outline, "مركز المساعدة (واتساب)", color: Colors.green, onTap: () { // منطق الواتساب هنا }),
-              _buildSettingItem(Icons.info_outline, "حول فلكس يمن", subtitle: "الإصدار V3.0.0"),
+              _buildSettingItem(Icons.help_outline, "مركز المساعدة (واتساب)", color: Colors.green, onTap: () {}),
+              _buildSettingItem(Icons.info_outline, "حول فلكس يمن", subtitle: "الإصدار V3.3.2"),
               _buildSettingItem(Icons.logout, "تسجيل الخروج", color: Colors.redAccent, onTap: () {}),
-              
               const SizedBox(height: 50),
-              Center(child: Text("Flex Yemen © 2024", style: TextStyle(color: Colors.grey[600], fontSize: 10))),
+              Center(
+                child: Text(
+                  "Flex Yemen © 2024", 
+                  style: TextStyle(color: isDarkMode ? Colors.white24 : Colors.grey[600], fontSize: 10),
+                ),
+              ),
               const SizedBox(height: 20),
             ]),
           ),
