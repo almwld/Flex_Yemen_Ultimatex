@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  // متغير لتحديد المدينة (يمكن ربطه بـ GPS لاحقاً)
+  String selectedCity = "صنعاء"; 
 
   @override
   Widget build(BuildContext context) {
@@ -10,37 +18,58 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 1. شريط البحث
-            _buildSearchBar(),
+            // 1. شريط اختيار المدينة + البحث
+            _buildTopBar(),
 
-            // 2. شريط الأقسام الشامل (المتحرك)
+            // 2. شريط الأقسام الشامل
             _buildComprehensiveCategories(),
 
-            // 3. محرك الـ 5 سلايدر (إعلانات المتجر الذكية)
+            // 3. محرك الـ 5 سلايدر (إعلانات ذكية حسب المدينة)
             _buildSmartAdSliders(),
 
-            // 4. بانرات المنتجات الـ 10 (عروض وتخفيضات)
+            // 4. بانرات العروض الـ 10 (عروض وتخفيضات حصرية)
             _buildProductBanners(),
             
             const SizedBox(height: 20),
-            const Text("بناء: Flex_Ultimate_V2.0.1", style: TextStyle(color: Colors.white10, fontSize: 10)),
+            const Text("بناء: Flex_Ultimate_V2.1.0_Geo", style: TextStyle(color: Colors.white10, fontSize: 10)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildTopBar() {
     return Padding(
       padding: const EdgeInsets.all(15.0),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: "ابحث عن مطعم، فندق، أو عقار...",
-          prefixIcon: const Icon(Icons.search, color: Color(0xFFD4AF37)),
-          filled: true,
-          fillColor: const Color(0xFF1A1A1A),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-        ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("فلكس يمن - عروض ذكية", style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold)),
+              DropdownButton<String>(
+                value: selectedCity,
+                dropdownColor: const Color(0xFF1A1A1A),
+                style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 12),
+                underline: Container(),
+                items: <String>['صنعاء', 'عدن', 'تعز', 'إب', 'المكلا'].map((String value) {
+                  return DropdownMenuItem<String>(value: value, child: Text(value));
+                }).toList(),
+                onChanged: (val) => setState(() => selectedCity = val!),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            decoration: InputDecoration(
+              hintText: "بحث في عروض $selectedCity...",
+              prefixIcon: const Icon(Icons.search, color: Color(0xFFD4AF37)),
+              filled: true,
+              fillColor: const Color(0xFF1A1A1A),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -80,36 +109,32 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // آلية الإعلانات الذكية (Smart Ad Logic)
   Widget _buildSmartAdSliders() {
-    return SizedBox(
-      height: 180,
-      child: PageView.builder(
-        itemCount: 5,
-        itemBuilder: (context, i) {
-          // محاكاة منطق AI: تغيير لون السلايدر بناءً على نوع الإعلان
-          return Container(
-            margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              image: const DecorationImage(
-                image: NetworkImage("https://via.placeholder.com/400x180/D4AF37/000000?text=Smart+Ad+Targeting"),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: LinearGradient(begin: Alignment.bottomRight, colors: [Colors.black.withOpacity(0.8), Colors.transparent]),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(15),
-                child: Align(alignment: Alignment.bottomRight, child: Text("إعلان مخصص لك", style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold))),
-              ),
-            ),
-          );
-        },
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Text("إعلانات مميزة في $selectedCity", style: const TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold)),
+        ),
+        SizedBox(
+          height: 180,
+          child: PageView.builder(
+            itemCount: 5,
+            itemBuilder: (context, i) {
+              return Container(
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: const Color(0xFF1A1A1A),
+                  border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.3)),
+                ),
+                child: Center(child: Text("إعلان $selectedCity ذكي رقم $i", style: const TextStyle(color: Color(0xFFD4AF37)))),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -126,14 +151,15 @@ class HomeScreen extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(width: 100, decoration: BoxDecoration(color: Colors.grey[900], borderRadius: const BorderRadius.horizontal(right: Radius.circular(15)))),
+            Container(width: 8, decoration: const BoxDecoration(color: Color(0xFFD4AF37), borderRadius: BorderRadius.horizontal(right: Radius.circular(15)))),
             const SizedBox(width: 15),
-            const Column(
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("عرض حصري أسبوعي", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                Text("تخفيضات تصل إلى ٤٠٪", style: TextStyle(color: Colors.red, fontSize: 12)),
+                Text("تخفيضات أسبوعية في $selectedCity", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                const Text("عروض حصرية لمستخدمي فلكس", style: TextStyle(color: Colors.grey, fontSize: 11)),
+                const Text("خصم ٤٠٪", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 14)),
               ],
             )
           ],
