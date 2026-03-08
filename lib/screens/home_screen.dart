@@ -1,3 +1,4 @@
+import "details_screen.dart";
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -143,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: List.generate(10, (i) => Container(
         height: 120,
         width: double.infinity,
-        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8), child: InkWell(onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailsScreen(title: "عرض حصري ذكي", price: "٤٥,٠٠٠ ر.ي", location: "صنعاء - حدة"))),
         decoration: BoxDecoration(
           color: const Color(0xFF1A1A1A),
           borderRadius: BorderRadius.circular(15),
