@@ -1,3 +1,4 @@
+import "screens/notifications_screen.dart";
 import "screens/cart_screen.dart";
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
