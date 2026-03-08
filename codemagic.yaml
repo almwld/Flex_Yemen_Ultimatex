@@ -6,30 +6,21 @@ workflows:
     environment:
       flutter: stable
     scripts:
-      - name: Hard Reset Android Structure
+      - name: Hard Reset & Setup Folders
         script: | 
+          # إنشاء الهيكل الرسمي أولاً
           flutter create . --platforms android --org com.almwld --project-name flex_yemen
-      
-      - name: Verify Flutter & Build Fat APK
+          mkdir -p lib/screens
+          
+      - name: Verify Flutter & Build
         script: | 
-          # كتابة المانيفست مع دعم v2 embedding
+          # التأكد من صلاحيات الإنترنت والمانيفست
           cat << 'MANIFEST' > android/app/src/main/AndroidManifest.xml
           <manifest xmlns:android="http://schemas.android.com/apk/res/android"
               package="com.almwld.flex_yemen">
-              
               <uses-permission android:name="android.permission.INTERNET"/>
-              <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-
-              <application
-                  android:label="Flex Yemen"
-                  android:icon="@mipmap/ic_launcher">
-                  
-                  <meta-data
-                      android:name="flutterEmbedding"
-                      android:value="2" />
-
-                  <activity
-                      android:name="com.almwld.flex_yemen.MainActivity"
+              <application android:label="Flex Yemen" android:icon="@mipmap/ic_launcher">
+                  <activity android:name="com.almwld.flex_yemen.MainActivity"
                       android:exported="true"
                       android:launchMode="singleTop"
                       android:theme="@style/LaunchTheme"
@@ -44,14 +35,6 @@ workflows:
               </application>
           </manifest>
           MANIFEST
-          
-          # التأكد من مسار الكود المصدري لأندرويد
-          mkdir -p android/app/src/main/kotlin/com/almwld/flex_yemen
-          cat << 'KOTLIN' > android/app/src/main/kotlin/com/almwld/flex_yemen/MainActivity.kt
-          package com.almwld.flex_yemen
-          import io.flutter.embedding.android.FlutterActivity
-          class MainActivity: FlutterActivity() { }
-          KOTLIN
 
           flutter clean
           flutter pub get
