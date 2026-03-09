@@ -6,24 +6,25 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(15),
-      children: const [
-        Text("المزادات الأكثر رواجاً ⚡", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-        SizedBox(height: 15),
-        AuctionCard(
-          title: "لاندكروزر 2024 VXR - جديد",
-          price: "85,000 $",
-          image: "https://images.unsplash.com/photo-1594568284297-7c64464062b1?q=80&w=1000&auto=format&fit=crop",
-          duration: Duration(hours: 5, minutes: 30),
-        ),
-        AuctionCard(
-          title: "ساعة رولكس ديت جست - ذهب",
-          price: "12,500 $",
-          image: "https://images.unsplash.com/photo-1587836374828-4dbaba94cf0e?q=80&w=1000&auto=format&fit=crop",
-          duration: Duration(hours: 2, minutes: 15),
-        ),
-      ],
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: ListView(
+        padding: const EdgeInsets.all(15),
+        children: const [
+          AuctionCard(
+            title: "لاندكروزر 2024 - وكالة",
+            price: "125,000 \$",
+            timeLeft: "02:45:10",
+            imageUrl: "https://picsum.photos/200",
+          ),
+          AuctionCard(
+            title: "عقيق يماني أحمر نادر",
+            price: "500 \$",
+            timeLeft: "05:12:00",
+            imageUrl: "https://picsum.photos/201",
+          ),
+        ],
+      ),
     );
   }
 }

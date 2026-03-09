@@ -7,20 +7,19 @@ class MapScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // API Key الخاص بك من LocationIQ
     const String myApiKey = 'efbc36e3-fdd1-428c-a96d-0dd8038fadb1';
 
     return Scaffold(
       body: FlutterMap(
         options: MapOptions(
-          initialCenter: LatLng(15.3521, 44.2163), // التمركز فوق صنعاء
+          initialCenter: LatLng(15.3521, 44.2163),
           initialZoom: 13.0,
         ),
         children: [
           TileLayer(
             urlTemplate: 'https://{s}.locationiq.com/v3/streets/tiles.json?key=$myApiKey&z={z}&x={x}&y={y}',
             subdomains: const ['us1', 'eu1', 'ap1'],
-            userAgentPackageName: 'com.flex_yemen.ultimate',
+            userAgentPackageName: 'com.flex_yemen.app',
           ),
           MarkerLayer(
             markers: [
@@ -28,7 +27,7 @@ class MapScreen extends StatelessWidget {
                 point: LatLng(15.3521, 44.2163),
                 width: 80,
                 height: 80,
-                child: const Icon(Icons.location_on, color: Color(0xFFD4AF37), size: 45),
+                child: const Icon(Icons.location_on, color: Color(0xFFD4AF37), size: 40),
               ),
             ],
           ),
