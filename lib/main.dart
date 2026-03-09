@@ -55,9 +55,16 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: _pages[_selectedIndex],
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (context) => const AddProductSheet(),
+          );
+        },
         backgroundColor: const Color(0xFFFFD700),
-        child: const Icon(Icons.add, color: Colors.black, size: 30),
+        child: const Icon(Icons.add, color: Colors.black, size: 35),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
@@ -144,4 +151,72 @@ class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
   @override
   Widget build(BuildContext context) => const Center(child: Text("إدارة الحساب الموثق"));
+}
+
+// واجهة إضافة منتج جديد
+class AddProductSheet extends StatelessWidget {
+  const AddProductSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.8,
+      decoration: const BoxDecoration(
+        color: Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(child: Container(width: 50, height: 5, decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(10)))),
+          const SizedBox(height: 20),
+          const Text("إضافة إعلان جديد", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFFFD700))),
+          const SizedBox(height: 20),
+          _buildInput("عنوان الإعلان (مثلاً: تويوتا كورولا 2022)"),
+          const SizedBox(height: 15),
+          _buildInput("السعر بالريال اليمني", isNumber: true),
+          const SizedBox(height: 15),
+          _buildInput("وصف المنتج بالتفصيل...", maxLines: 3),
+          const SizedBox(height: 20),
+          // زر رفع الصور
+          InkWell(
+            onTap: () {},
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(border: Border.all(color: Colors.white10), borderRadius: BorderRadius.circular(12)),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.camera_alt, color: Color(0xFFFFD700)), SizedBox(width: 10), Text("إضافة صور المنتج")],
+              ),
+            ),
+          ),
+          const Spacer(),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFFD700),
+              minimumSize: const Size(double.infinity, 50),
+              shape: RoundedRectangle_border(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: const Text("نشر الإعلان الآن", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInput(String hint, {bool isNumber = false, int maxLines = 1}) {
+    return TextField(
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      maxLines: maxLines,
+      decoration: InputDecoration(
+        hintText: hint,
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.05),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+      ),
+    );
+  }
 }
