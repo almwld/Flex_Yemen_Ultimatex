@@ -1,3 +1,8 @@
+import "package:flex_yemen/screens/wallet_screen.dart";
+import "package:flex_yemen/screens/store_screen.dart";
+import "package:flex_yemen/screens/chat_list_screen.dart";
+import "package:flex_yemen/screens/profile_screen.dart";
+import "package:flex_yemen/screens/map_screen.dart";
 import "package:flex_yemen/screens/map_screen.dart";
 import "package:flex_yemen/screens/profile_screen.dart";
 import "package:flex_yemen/screens/chat_list_screen.dart";
