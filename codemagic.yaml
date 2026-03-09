@@ -1,49 +1,22 @@
 workflows:
-  android-workflow:
-    name: Flex Yemen Ultimate Build
+  android-build:
+    name: Flex Yemen Auto Build
+    max_build_duration: 30
     instance_type: mac_mini_m1
-    max_build_duration: 40
-    environment:
-      flutter: stable
     scripts:
-      - name: Hard Reset & Setup Folders
+      - name: Generate Android Platform Files
         script: | 
-          flutter create . --platforms android --org com.almwld --project-name flex_yemen
-          mkdir -p lib/screens
-          
-      - name: Verify Flutter & Build
+          # هذا السطر يحل محل عدم وجود فلوتر عندك
+          flutter create --platforms android .
+      - name: Get dependencies
         script: | 
-          # كتابة المانيفست مع تعريف الـ v2 embedding لإنهاء الخطأ
-          cat << 'MANIFEST' > android/app/src/main/AndroidManifest.xml
-          <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-              package="com.almwld.flex_yemen_v2">
-              <uses-permission android:name="android.permission.INTERNET"/>
-              <application android:label="Flex Yemen" android:icon="@mipmap/ic_launcher">
-                  <activity android:name="com.almwld.flex_yemen_v2.MainActivity"
-                      android:exported="true"
-                      android:launchMode="singleTop"
-                      android:theme="@style/LaunchTheme"
-                      android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|screenLayout|density|fontScale"
-                      android:hardwareAccelerated="true"
-                      android:windowSoftInputMode="adjustResize">
-                      <intent-filter>
-                          <action android:name="android.intent.action.MAIN"/>
-                          <category android:name="android.intent.category.LAUNCHER"/>
-                      </intent-filter>
-                  </activity>
-                  <meta-data
-                      android:name="flutterEmbedding"
-                      android:value="2" />
-              </application>
-          </manifest>
-          MANIFEST
-
-          flutter clean
           flutter pub get
-          flutter build apk --release --no-tree-shake-icons
+      - name: Build Android Release
+        script: | 
+          flutter build apk --release --build-name=1.0.0 --build-number=1
     artifacts:
-      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/flutter-apk/*.apk
     publishing:
       email:
         recipients:
-          - Binobaeid@gmail.com
+          - YOUR_EMAIL@gmail.com # ضع إيميلك هنا لتصلك الرسالة عند النجاح
