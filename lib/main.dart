@@ -348,3 +348,68 @@ class SearchResultsOverlay extends StatelessWidget {
     );
   }
 }
+
+class AuctionCard extends StatelessWidget {
+  final String title;
+  final String currentBid;
+  final String timeLeft;
+
+  const AuctionCard({super.key, required this.title, required this.currentBid, required this.timeLeft});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFFFD700).withOpacity(0.2)),
+        boxShadow: [BoxShadow(color: Colors.red.withOpacity(0.05), blurRadius: 10)],
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      const Icon(Icons.timer, color: Colors.red, size: 16),
+                      const SizedBox(width: 5),
+                      Text(timeLeft, style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(12)),
+                child: Column(
+                  children: [
+                    const Text("أعلى سومة", style: TextStyle(fontSize: 10, color: Colors.grey)),
+                    Text(currentBid, style: const TextStyle(color: Color(0xFFFFD700), fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFFD700),
+              minimumSize: const Size(double.infinity, 45),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: const Text("زايد الآن", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+}
