@@ -143,16 +143,16 @@ class StoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> cats = [
-      {"n": "برايم", "i": Icons.stars, "c": Colors.amber},
-      {"n": "مطاعم", "i": Icons.fastfood, "c": Colors.orange},
-      {"n": "سوبر ماركت", "i": Icons.shopping_cart, "c": Colors.green},
-      {"n": "إلكترونيات", "i": Icons.laptop, "c": Colors.blue},
-      {"n": "سيارات", "i": Icons.car_rental, "c": Colors.red},
-      {"n": "عقارات", "i": Icons.home, "c": Colors.brown},
+      {"n": "فلكس برايم", "i": Icons.workspace_premium, "c": Color(0xFFFFD700)},
+      {"n": "المطاعم", "i": Icons.restaurant, "c": Colors.orange},
+      {"n": "سوبر ماركت", "i": Icons.shopping_bag, "c": Colors.green},
+      {"n": "إلكترونيات", "i": Icons.devices, "c": Colors.blue},
+      {"n": "السيارات", "i": Icons.directions_car, "c": Colors.red},
+      {"n": "العقارات", "i": Icons.location_city, "c": Colors.brown},
       {"n": "أزياء", "i": Icons.checkroom, "c": Colors.purple},
-      {"n": "صحة", "i": Icons.medical_services, "c": Colors.teal},
-      {"n": "خدمات", "i": Icons.build, "c": Colors.blueGrey},
-      {"n": "وظائف", "i": Icons.work, "c": Colors.indigo},
+      {"n": "صحة وجمال", "i": Icons.spa, "c": Colors.pink},
+      {"n": "صيانة", "i": Icons.handyman, "c": Colors.blueGrey},
+      {"n": "وظائف", "i": Icons.badge, "c": Colors.indigo},
     ];
     return Scaffold(
       appBar: AppBar(title: const Text("المتجر الشامل")),
@@ -183,6 +183,145 @@ class StoreScreen extends StatelessWidget {
             ],
           ),
         ),
+        ],
+      ),
+    );
+  }
+}
+
+class ProductDetailsScreen extends StatelessWidget {
+  final String title;
+  final String price;
+  final String category;
+
+  const ProductDetailsScreen({
+    super.key, 
+    required this.title, 
+    required this.price, 
+    required this.category
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              // رأس الصفحة مع صورة المنتج
+              SliverAppBar(
+                expandedHeight: 350,
+                backgroundColor: Colors.black,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[900],
+                      image: const DecorationImage(
+                        image: NetworkImage("https://via.placeholder.com/600x600"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(color: const Color(0xFFFFD700).withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                            child: Text(category, style: const TextStyle(color: Color(0xFFFFD700), fontSize: 12)),
+                          ),
+                          const Text("منذ ساعتين", style: TextStyle(color: Colors.grey, fontSize: 12)),
+                        ],
+                      ),
+                      const SizedBox(height: 15),
+                      Text(title, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 10),
+                      Text(price, style: const TextStyle(fontSize: 22, color: Color(0xFFFFD700), fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 25),
+                      
+                      // بطاقة البائع الموثق
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(color: const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(15)),
+                        child: Row(
+                          children: [
+                            const CircleAvatar(radius: 25, backgroundColor: Colors.grey, child: Icon(Icons.person)),
+                            const SizedBox(width: 15),
+                            const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text("معرض البركة", style: TextStyle(fontWeight: FontWeight.bold)),
+                                    SizedBox(width: 5),
+                                    Icon(Icons.verified, color: Colors.blue, size: 16),
+                                  ],
+                                ),
+                                Text("بائع موثوق في صنعاء", style: TextStyle(color: Colors.grey, fontSize: 12)),
+                              ],
+                            ),
+                            const Spacer(),
+                            IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_forward_ios, size: 16)),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 25),
+                      const Text("وصف المنتج", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 10),
+                      const Text(
+                        "هذا المنتج متوفر بحالة ممتازة مع ضمانة فحص شاملة. متوفر في فرعنا الرئيسي بصنعاء - شارع الستين. تواصل معنا لمزيد من التفاصيل.",
+                        style: TextStyle(color: Colors.grey, height: 1.5),
+                      ),
+                      const SizedBox(height: 100), // مساحة للأزرار السفلية
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          
+          // أزرار الإجراءات السفلية (Floating)
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.black.withOpacity(0), Colors.black]),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFD700), padding: const EdgeInsets.symmetric(vertical: 15), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                      child: const Text("شراء عبر الوساطة", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Container(
+                    decoration: BoxDecoration(color: const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(15)),
+                    child: IconButton(onPressed: () {}, icon: const Icon(Icons.chat_bubble_outline, color: Color(0xFFFFD700))),
+                  ),
+                  const SizedBox(width: 10),
+                  Container(
+                    decoration: BoxDecoration(color: const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(15)),
+                    child: IconButton(onPressed: () {}, icon: const Icon(Icons.phone_outlined, color: Colors.green)),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
