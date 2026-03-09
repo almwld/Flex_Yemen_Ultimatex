@@ -94,12 +94,32 @@ class _MainScreenState extends State<MainScreen> {
     bool isSelected = _selectedIndex == index;
     return GestureDetector(
       onTap: () => setState(() => _selectedIndex = index),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: isSelected ? const Color(0xFFFFD700) : Colors.grey, size: 24),
-          Text(label, style: TextStyle(color: isSelected ? const Color(0xFFFFD700) : Colors.grey, fontSize: 10)),
-        ],
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFFFFD700).withOpacity(0.15) : Colors.transparent,
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? const Color(0xFFFFD700) : Colors.grey.withOpacity(0.6),
+              size: 24,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? const Color(0xFFFFD700) : Colors.grey,
+                fontSize: 10,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -141,76 +161,28 @@ class StoreScreen extends StatelessWidget {
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 10),
         itemCount: cats.length,
         itemBuilder: (context, index) => Container(
-          decoration: BoxDecoration(color: const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(15)),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Icon(cats[index]['i'], color: cats[index]['c']),
-            Text(cats[index]['n'], style: const TextStyle(fontSize: 10)),
-          ]),
-        ),
-      ),
-    );
-  }
-}
-
-// --- واجهة الخرائط ---
-class MapScreen extends StatelessWidget {
-  const MapScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Icon(Icons.map, size: 100, color: Color(0xFFFFD700))));
-  }
-}
-
-// --- واجهة المحفظة ---
-class WalletScreen extends StatelessWidget {
-  const WalletScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text("محفظة فلكس يمن")));
-  }
-}
-
-// --- واجهة الدردشة ---
-class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text("نظام الدردشة والوساطة")));
-  }
-}
-
-// --- واجهة حسابي ---
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Icon(Icons.person, size: 100, color: Color(0xFFFFD700))));
-  }
-}
-
-// --- واجهة إضافة منتج جديد ---
-class AddProductSheet extends StatelessWidget {
-  const AddProductSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
-      decoration: const BoxDecoration(color: Color(0xFF1A1A1A), borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          const Text("إضافة إعلان جديد", style: TextStyle(fontSize: 20, color: Color(0xFFFFD700))),
-          const SizedBox(height: 20),
-          const TextField(decoration: InputDecoration(hintText: "اسم المنتج")),
-          const SizedBox(height: 10),
-          const TextField(decoration: InputDecoration(hintText: "السعر"), keyboardType: TextInputType.number),
-          const Spacer(),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFD700), minimumSize: const Size(double.infinity, 50)),
-            child: const Text("نشر الآن", style: TextStyle(color: Colors.black)),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1A1A1A),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white.withOpacity(0.05)),
+            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 5))],
           ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: (cats[index]["c"] as Color).withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(cats[index]["i"], color: cats[index]["c"], size: 28),
+              ),
+              const SizedBox(height: 8),
+              Text(cats[index]["n"], style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.white70)),
+            ],
+          ),
+        ),
         ],
       ),
     );
