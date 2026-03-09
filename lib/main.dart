@@ -115,7 +115,7 @@ class HomeScreen extends StatelessWidget {
           Text("02:45:12", style: TextStyle(color: Colors.redAccent)),
         ]),
         SizedBox(height: 10),
-        Text("السوم الحالي: 45,000 $", style: TextStyle(color: Color(0xFFFFD700))),
+        Text("السوم الحالي: 45,000 \$", style: TextStyle(color: Color(0xFFFFD700))),
       ]),
     );
   }
