@@ -1,8 +1,6 @@
 name: flex_yemen
-description: A new Flutter project.
-publish_to: 'none'
+description: Flex Yemen Ultimate Marketplace
 version: 1.0.0+1
-
 environment:
   sdk: '>=3.0.0 <4.0.0'
 
@@ -10,12 +8,11 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
-  google_maps_flutter: ^2.5.3
+  supabase_flutter: ^2.0.2
   flutter_map: ^6.1.0
-  latlong2: ^0.9.0
+  latlong2: ^0.9.1
   image_picker: ^1.0.7
   http: ^1.2.0
-  supabase_flutter: ^2.0.2
 
 dev_dependencies:
   flutter_test:
