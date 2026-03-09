@@ -42,7 +42,7 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
     const HomeScreen(),
-    const MapScreen(),
+    MapScreen(),
     const StoreScreen(),
     const WalletScreen(),
     const ChatScreen(),
@@ -154,7 +154,7 @@ class StoreScreen extends StatelessWidget {
   Widget _cat(IconData i, String n, Color c) => Column(children: [Icon(i, color: c, size: 30), Text(n, style: const TextStyle(fontSize: 12))]);
 }
 
-class MapScreen extends StatelessWidget { const MapScreen({super.key}); @override Widget build(BuildContext context) => const Scaffold(body: Center(child: Text("الخرائط"))); }
+class MapScreen extends StatelessWidget { MapScreen({super.key}); @override Widget build(BuildContext context) => const Scaffold(body: Center(child: Text("الخرائط"))); }
 class WalletScreen extends StatelessWidget { const WalletScreen({super.key}); @override Widget build(BuildContext context) => const Scaffold(body: Center(child: Text("المحفظة"))); }
 class ChatScreen extends StatelessWidget { const ChatScreen({super.key}); @override Widget build(BuildContext context) => const Scaffold(body: Center(child: Text("الدردشة"))); }
 class ProfileScreen extends StatelessWidget { const ProfileScreen({super.key}); @override Widget build(BuildContext context) => const Scaffold(body: Center(child: Text("حسابي"))); }

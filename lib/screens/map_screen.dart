@@ -11,7 +11,7 @@ class MapScreen extends StatelessWidget {
 
     return Scaffold(
       body: FlutterMap(
-        options: const MapOptions(
+        options: MapOptions(
           initialCenter: LatLng(15.3521, 44.2163), // صنعاء
           initialZoom: 13.0,
         ),
@@ -19,15 +19,15 @@ class MapScreen extends StatelessWidget {
           TileLayer(
             urlTemplate: 'https://{s}.locationiq.com/v3/streets/tiles.json?key=$myApiKey&z={z}&x={x}&y={y}',
             subdomains: const ['us1', 'eu1', 'ap1'],
-            userAgentPackageName: 'com.flexyemen.ultimate',
+            userAgentPackageName: 'com.flex_yemen.app',
           ),
-          const MarkerLayer(
+          MarkerLayer(
             markers: [
               Marker(
                 point: LatLng(15.3521, 44.2163),
                 width: 80,
                 height: 80,
-                child: Icon(Icons.location_on, color: Color(0xFFD4AF37), size: 40),
+                child: const Icon(Icons.location_on, color: Color(0xFFD4AF37), size: 40),
               ),
             ],
           ),
