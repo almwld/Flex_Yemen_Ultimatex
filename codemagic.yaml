@@ -1,16 +1,19 @@
 workflows:
   android-release:
-    name: Flex Yemen Android Release
+    name: Flex Yemen Auto-Repair Build
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
       flutter: stable
-      groups:
-        - google_play_credentials
     scripts:
-      - name: Get Flutter dependencies
+      - name: Repair and Build Android Platform
         script: |
-          flutter packages pub get
+          # حذف المجلدات المعطوبة إن وجدت
+          rm -rf android/
+          # إجبار فلاتر على إعادة إنشاء ملفات الأندرويد الحديثة
+          flutter create --platforms android .
+          # جلب المكتبات من جديد
+          flutter pub get
       - name: Build Android Release
         script: |
           flutter build apk --release --no-shrink
@@ -19,4 +22,4 @@ workflows:
     publishing:
       email:
         recipients:
-          - YOUR_EMAIL@gmail.com # ضع إيميلك هنا لتصلك النسخة فور جهوزيتها
+          - YOUR_EMAIL@gmail.com
