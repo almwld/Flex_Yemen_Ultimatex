@@ -33,3 +33,15 @@ android {
         }
     }
 }
+
+android {
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+}
+
+android {
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+}
