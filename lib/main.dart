@@ -327,3 +327,24 @@ class ProductDetailsScreen extends StatelessWidget {
     );
   }
 }
+
+class SearchResultsOverlay extends StatelessWidget {
+  final String query;
+  const SearchResultsOverlay({super.key, required this.query});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      color: const Color(0xFF1A1A1A),
+      child: ListView.builder(
+        itemCount: 3,
+        itemBuilder: (context, index) => ListTile(
+          leading: const Icon(Icons.history, color: Colors.grey),
+          title: Text("نتيجة البحث عن $query"),
+          onTap: () {},
+        ),
+      ),
+    );
+  }
+}
