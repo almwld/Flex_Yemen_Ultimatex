@@ -7,7 +7,7 @@ class MapScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // استخدام المفتاح الخاص بك لتفعيل الخريطة
+    // API Key الخاص بك من LocationIQ
     const String myApiKey = 'efbc36e3-fdd1-428c-a96d-0dd8038fadb1';
 
     return Scaffold(

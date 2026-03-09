@@ -6,16 +6,14 @@ import 'package:flex_yemen/screens/store_screen.dart';
 import 'package:flex_yemen/screens/wallet_screen.dart';
 import 'package:flex_yemen/screens/chat_list_screen.dart';
 import 'package:flex_yemen/screens/profile_screen.dart';
-import 'package:flex_yemen/widgets/custom_app_bar.dart';
-import 'package:flex_yemen/widgets/custom_nav_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ربط القيم الحقيقية لـ Supabase
+  // ربط بيانات Supabase الحقيقية
   await Supabase.initialize(
-    url: 'https://efbc36e3fdd1428c96d0.supabase.co', // تم التعديل بناءً على المعرف الخاص بك
-    anonKey: 'efbc36e3-fdd1-428c-a96d-0dd8038fadb1', 
+    url: 'https://efbc36e3fdd1428c96d0.supabase.co',
+    anonKey: 'efbc36e3-fdd1-428c-a96d-0dd8038fadb1',
   );
 
   runApp(const FlexYemenApp());
@@ -30,7 +28,6 @@ class FlexYemenApp extends StatefulWidget {
 
 class _FlexYemenAppState extends State<FlexYemenApp> {
   int _selectedIndex = 0;
-  bool _isDarkMode = true;
 
   final List<Widget> _pages = [
     const HomeScreen(),
@@ -41,29 +38,30 @@ class _FlexYemenAppState extends State<FlexYemenApp> {
     const ProfileScreen(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: _isDarkMode ? ThemeData.dark() : ThemeData.light(),
+      theme: ThemeData.dark().copyWith(
+        primaryColor: const Color(0xFFD4AF37),
+        scaffoldBackgroundColor: Colors.black,
+      ),
       home: Scaffold(
-        appBar: CustomAppBar(
-          isDarkMode: _isDarkMode,
-          cartCount: 0,
-          onThemeToggle: () => setState(() => _isDarkMode = !_isDarkMode),
-          onSettingsPressed: () {},
-          onCartPressed: () {},
-        ),
         body: _pages[_selectedIndex],
-        bottomNavigationBar: CustomNavBar(
-          selectedIndex: _selectedIndex,
-          onItemTapped: _onItemTapped,
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: (index) => setState(() => _selectedIndex = index),
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: const Color(0xFFD4AF37),
+          unselectedItemColor: Colors.grey,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
+            BottomNavigationBarItem(icon: Icon(Icons.map), label: 'الخريطة'),
+            BottomNavigationBarItem(icon: Icon(Icons.store), label: 'المتجر'),
+            BottomNavigationBarItem(icon: Icon(Icons.wallet), label: 'المحفظة'),
+            BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'الدردشة'),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'حسابي'),
+          ],
         ),
       ),
     );
