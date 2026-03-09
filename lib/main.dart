@@ -3,13 +3,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // تهيئة الاتصال باستخدام مفاتيحك التي قدمتها سابقاً
+  
+  // تهيئة سوبابيز بمفاتيحك الخاصة
   await Supabase.initialize(
     url: 'https://pivihjmxpydxidpghszs.supabase.co',
-    anonKey: 'YOUR_ANON_KEY_FROM_PREVIOUS_CHATS', // سيقوم Codemagic باستخدام المفاتيح المسجلة
+    anonKey: 'YOUR_ANON_KEY_HERE', // استبدلها بمفتاحك الذي قدمته سابقا
   );
-
+  
   runApp(const FlexYemenApp());
 }
 
@@ -71,17 +71,20 @@ class _MainScreenState extends State<MainScreen> {
         shape: const CircularNotchedRectangle(),
         notchMargin: 8.0,
         color: const Color(0xFF1A1A1A),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildNavItem(Icons.home_outlined, "الرئيسية", 0),
-            _buildNavItem(Icons.map_outlined, "الخرائط", 1),
-            _buildNavItem(Icons.store_outlined, "المتجر", 2),
-            const SizedBox(width: 40),
-            _buildNavItem(Icons.account_balance_wallet_outlined, "المحفظة", 3),
-            _buildNavItem(Icons.chat_outlined, "الدردشة", 4),
-            _buildNavItem(Icons.person_outline, "حسابي", 5),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildNavItem(Icons.home_outlined, "الرئيسية", 0),
+              _buildNavItem(Icons.map_outlined, "الخرائط", 1),
+              _buildNavItem(Icons.store_mall_directory_outlined, "المتجر", 2),
+              const SizedBox(width: 40),
+              _buildNavItem(Icons.account_balance_wallet_outlined, "المحفظة", 3),
+              _buildNavItem(Icons.chat_outlined, "الدردشة", 4),
+              _buildNavItem(Icons.person_outline, "حسابي", 5),
+            ],
+          ),
         ),
       ),
     );
@@ -102,120 +105,113 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-// سيتم جلب البيانات الفعلية هنا لاحقاً
+// --- الواجهة الرئيسية ---
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Center(child: Text("واجهة العروض الحية من Supabase"));
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("فلكس يمن", style: TextStyle(color: Color(0xFFFFD700))), backgroundColor: Colors.black),
+      body: const Center(child: Text("واجهة العروض والإعلانات الرئيسية")),
+    );
+  }
 }
 
+// --- واجهة المتجر ---
 class StoreScreen extends StatelessWidget {
   const StoreScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Center(child: Text("المتجر الشامل"));
-}
-
-class MapScreen extends StatelessWidget {
-  const MapScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const Center(child: Text("رادار المواقع الحية"));
-}
-
-class WalletScreen extends StatelessWidget {
-  const WalletScreen({super.key});
-  @override
   Widget build(BuildContext context) {
-    final client = Supabase.instance.client;
+    final List<Map<String, dynamic>> cats = [
+      {"n": "برايم", "i": Icons.stars, "c": Colors.amber},
+      {"n": "مطاعم", "i": Icons.fastfood, "c": Colors.orange},
+      {"n": "سوبر ماركت", "i": Icons.shopping_cart, "c": Colors.green},
+      {"n": "إلكترونيات", "i": Icons.laptop, "c": Colors.blue},
+      {"n": "سيارات", "i": Icons.car_rental, "c": Colors.red},
+      {"n": "عقارات", "i": Icons.home, "c": Colors.brown},
+      {"n": "أزياء", "i": Icons.checkroom, "c": Colors.purple},
+      {"n": "صحة", "i": Icons.medical_services, "c": Colors.teal},
+      {"n": "خدمات", "i": Icons.build, "c": Colors.blueGrey},
+      {"n": "وظائف", "i": Icons.work, "c": Colors.indigo},
+    ];
     return Scaffold(
-      appBar: AppBar(title: const Text("محفظة فلكس")),
-      body: Center(
-        child: StreamBuilder(
-          stream: client.from('profiles').stream(primaryKey: ['id']).execute(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return const CircularProgressIndicator();
-            return const Text("رصيدك الحالي يتم تحديثه لحظياً...");
-          },
+      appBar: AppBar(title: const Text("المتجر الشامل")),
+      body: GridView.builder(
+        padding: const EdgeInsets.all(15),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 10),
+        itemCount: cats.length,
+        itemBuilder: (context, index) => Container(
+          decoration: BoxDecoration(color: const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(15)),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Icon(cats[index]['i'], color: cats[index]['c']),
+            Text(cats[index]['n'], style: const TextStyle(fontSize: 10)),
+          ]),
         ),
       ),
     );
   }
 }
 
+// --- واجهة الخرائط ---
+class MapScreen extends StatelessWidget {
+  const MapScreen({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Icon(Icons.map, size: 100, color: Color(0xFFFFD700))));
+  }
+}
+
+// --- واجهة المحفظة ---
+class WalletScreen extends StatelessWidget {
+  const WalletScreen({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text("محفظة فلكس يمن")));
+  }
+}
+
+// --- واجهة الدردشة ---
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Center(child: Text("الدردشة المشفرة"));
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text("نظام الدردشة والوساطة")));
+  }
 }
 
+// --- واجهة حسابي ---
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Center(child: Text("إدارة الحساب الموثق"));
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Icon(Icons.person, size: 100, color: Color(0xFFFFD700))));
+  }
 }
 
-// واجهة إضافة منتج جديد
+// --- واجهة إضافة منتج جديد ---
 class AddProductSheet extends StatelessWidget {
   const AddProductSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.8,
-      decoration: const BoxDecoration(
-        color: Color(0xFF1A1A1A),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-      ),
+      height: MediaQuery.of(context).size.height * 0.7,
+      decoration: const BoxDecoration(color: Color(0xFF1A1A1A), borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
       padding: const EdgeInsets.all(20),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(child: Container(width: 50, height: 5, decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(10)))),
+          const Text("إضافة إعلان جديد", style: TextStyle(fontSize: 20, color: Color(0xFFFFD700))),
           const SizedBox(height: 20),
-          const Text("إضافة إعلان جديد", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFFFD700))),
-          const SizedBox(height: 20),
-          _buildInput("عنوان الإعلان (مثلاً: تويوتا كورولا 2022)"),
-          const SizedBox(height: 15),
-          _buildInput("السعر بالريال اليمني", isNumber: true),
-          const SizedBox(height: 15),
-          _buildInput("وصف المنتج بالتفصيل...", maxLines: 3),
-          const SizedBox(height: 20),
-          // زر رفع الصور
-          InkWell(
-            onTap: () {},
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(border: Border.all(color: Colors.white10), borderRadius: BorderRadius.circular(12)),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Icon(Icons.camera_alt, color: Color(0xFFFFD700)), SizedBox(width: 10), Text("إضافة صور المنتج")],
-              ),
-            ),
-          ),
+          const TextField(decoration: InputDecoration(hintText: "اسم المنتج")),
+          const SizedBox(height: 10),
+          const TextField(decoration: InputDecoration(hintText: "السعر"), keyboardType: TextInputType.number),
           const Spacer(),
           ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFFFD700),
-              minimumSize: const Size(double.infinity, 50),
-              shape: RoundedRectangle_border(borderRadius: BorderRadius.circular(12)),
-            ),
-            child: const Text("نشر الإعلان الآن", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFD700), minimumSize: const Size(double.infinity, 50)),
+            child: const Text("نشر الآن", style: TextStyle(color: Colors.black)),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildInput(String hint, {bool isNumber = false, int maxLines = 1}) {
-    return TextField(
-      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-      maxLines: maxLines,
-      decoration: InputDecoration(
-        hintText: hint,
-        filled: true,
-        fillColor: Colors.white.withOpacity(0.05),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
       ),
     );
   }
