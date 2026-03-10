@@ -1,8 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong2.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,196 +34,89 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 4; // افتراضي على الدردشة للعرض
   final List<Widget> _pages = [
     const HomeScreen(),
     const MapScreen(),
     const StoreScreen(),
-    const WalletScreen(),
-    const ChatListScreen(),
+    const PostAdScreen(),
+    const ChatListScreen(), // واجهة قائمة المحادثات
     const ProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(65),
-        child: ClipRRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-            child: AppBar(
-              title: const Text("FLEX YEMEN", 
-                style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.w900, letterSpacing: 2, fontSize: 22)),
-              centerTitle: true,
-              backgroundColor: Colors.black.withOpacity(0.6),
-              elevation: 0,
-              shape: const Border(bottom: BorderSide(color: Color(0x33D4AF37), width: 0.5)),
-            ),
-          ),
-        ),
-      ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-        height: 70,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: const Color(0x44D4AF37), width: 1),
+        decoration: const BoxDecoration(
+          color: Color(0xFF1A1A1A),
+          border: Border(top: BorderSide(color: Colors.white10, width: 0.5)),
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(30),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-            child: BottomNavigationBar(
-              currentIndex: _selectedIndex,
-              onTap: (index) => setState(() => _selectedIndex = index),
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.white.withOpacity(0.05),
-              selectedItemColor: const Color(0xFFD4AF37),
-              unselectedItemColor: Colors.white38,
-              showSelectedLabels: true,
-              showUnselectedLabels: false,
-              elevation: 0,
-              items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'الرئيسية'),
-                BottomNavigationBarItem(icon: Icon(Icons.explore_rounded), label: 'الخريطة'),
-                BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_rounded), label: 'المتجر'),
-                BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet_rounded), label: 'المحفظة'),
-                BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_rounded), label: 'الدردشة'),
-                BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: 'حسابي'),
-              ],
-            ),
-          ),
+        child: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: (index) => setState(() => _selectedIndex = index),
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.transparent,
+          selectedItemColor: const Color(0xFFD4AF37),
+          unselectedItemColor: Colors.grey,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'الرئيسية'),
+            BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'الخريطة'),
+            BottomNavigationBarItem(icon: Icon(Icons.grid_view_rounded), label: 'المتجر'),
+            BottomNavigationBarItem(icon: CircleAvatar(backgroundColor: Color(0xFFD4AF37), radius: 18, child: Icon(Icons.add, color: Colors.black)), label: 'إضافة'),
+            BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_rounded), label: 'الدردشة'),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'حسابي'),
+          ],
         ),
       ),
     );
   }
 }
 
-// الشاشات الأخرى (HomeScreen, MapScreen الخ) تبقى كما هي...
-class HomeScreen extends StatelessWidget { const HomeScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("فلكس يمن - الرئيسية")); }
-class MapScreen extends StatelessWidget { const MapScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("الخريطة الحية")); }
-
-// --- واجهة المتجر الجديدة والاحترافية ---
-class StoreScreen extends StatelessWidget {
-  const StoreScreen({super.key});
+// --- واجهة قائمة الدردشات (Chat List) ---
+class ChatListScreen extends StatelessWidget {
+  const ChatListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          // شريط البحث الملكي
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1A1A1A),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0x44D4AF37)),
-                ),
-                child: const TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.search, color: Color(0xFFD4AF37)),
-                    hintText: "ابحث عن سيارات، عقارات، إلكترونيات...",
-                    hintStyle: TextStyle(color: Colors.grey),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          
-          // شبكة الأقسام الرئيسية
-          SliverPadding(
-            padding: const EdgeInsets.all(20),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, crossAxisSpacing: 15, mainAxisSpacing: 15, childAspectRatio: 1.1,
-              ),
-              delegate: SliverChildListDelegate([
-                _buildCategoryCard(context, Icons.car_repair, "سيارات ومحركات", Colors.blue),
-                _buildCategoryCard(context, Icons.home_work, "عقارات وأراضي", Colors.orange),
-                _buildCategoryCard(context, Icons.phone_android, "جوالات وأجهزة", Colors.green),
-                _buildCategoryCard(context, Icons.fastfood, "مطاعم وتوصيل", Colors.redAccent),
-              ]),
-            ),
-          ),
-          
-          // قسم "المنتجات المميزة"
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                const Text("وصلنا حديثاً", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-                TextButton(onPressed: () {}, child: const Text("عرض الكل", style: TextStyle(color: Color(0xFFD4AF37)))),
-              ]),
-            ),
-          ),
-          
-          // شبكة المنتجات (مثال بسيط)
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, bottom: 100), // مساحة للشريط السفلي
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10, childAspectRatio: 0.75,
-              ),
-              delegate: SliverChildListDelegate([
-                _buildProductCard("تويوتا لاندكروزر 2024", "45,000 $", "https://img.freepik.com/premium-photo/luxury-suv-car-isolated-black-background_8130-1033.jpg"),
-                _buildProductCard("فيلا فاخرة في صنعاء", "150M YER", "https://img.freepik.com/premium-photo/beautiful-modern-house-exterior-with-swimming-pool_8130-117.jpg"),
-              ]),
-            ),
-          ),
-        ],
+      appBar: AppBar(
+        title: const Text("المحادثات", style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.black,
+        elevation: 0,
       ),
-    );
-  }
-
-  Widget _buildCategoryCard(BuildContext context, IconData icon, String label, Color color) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0x33D4AF37), width: 0.5),
-        boxShadow: [BoxShadow(color: color.withOpacity(0.1), blurRadius: 10, spreadRadius: 1)],
+      body: ListView.separated(
+        itemCount: 5,
+        separatorBuilder: (context, index) => const Divider(color: Colors.white10, height: 1),
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: const CircleAvatar(
+              backgroundImage: NetworkImage("https://ui-avatars.com/api/?name=User&background=D4AF37&color=000"),
+            ),
+            title: Text("أبو محمد الصنعاني ${index + 1}", style: const TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: const Text("كم السعر النهائي للجنبية؟", style: TextStyle(color: Colors.grey, fontSize: 13)),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("10:30 ص", style: TextStyle(color: Colors.grey, fontSize: 10)),
+                const SizedBox(height: 5),
+                if (index == 0) Container(padding: const EdgeInsets.all(6), decoration: const BoxDecoration(color: Color(0xFFD4AF37), shape: BoxShape.circle), child: const Text("1", style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold))),
+              ],
+            ),
+            onTap: () {
+              // هنا ننتقل لصفحة الدردشة المفصلة
+            },
+          );
+        },
       ),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Icon(icon, color: color, size: 40),
-        const SizedBox(height: 10),
-        Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-        const SizedBox(height: 5),
-        Text("25 إعلان نشط", style: TextStyle(color: color.withOpacity(0.7), fontSize: 10)),
-      ]),
-    );
-  }
-
-  Widget _buildProductCard(String title, String price, String imageUrl) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A),
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Colors.white10),
-      ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        ClipRRect(borderRadius: const BorderRadius.vertical(top: Radius.circular(15)), child: Image.network(imageUrl, height: 120, width: double.infinity, fit: BoxFit.cover)),
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12), maxLines: 2),
-            const SizedBox(height: 5),
-            Text(price, style: const TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold)),
-          ]),
-        ),
-      ]),
     );
   }
 }
 
-// باقي الشاشات تبقى كما هي...
-class WalletScreen extends StatelessWidget { const WalletScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("المحفظة الذهبية")); }
-class ChatListScreen extends StatelessWidget { const ChatListScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("المحادثات")); }
-class ProfileScreen extends StatelessWidget { const ProfileScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("الملف الشخصي")); }
+// الشاشات الأخرى مؤقتاً
+class HomeScreen extends StatelessWidget { const HomeScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("الرئيسية")); }
+class MapScreen extends StatelessWidget { const MapScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("الخريطة")); }
+class StoreScreen extends StatelessWidget { const StoreScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("المتجر")); }
+class PostAdScreen extends StatelessWidget { const PostAdScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("إضافة إعلان")); }
+class ProfileScreen extends StatelessWidget { const ProfileScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("حسابي")); }
