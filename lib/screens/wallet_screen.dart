@@ -36,7 +36,8 @@ class WalletScreen extends StatelessWidget {
                 children: [
                   const Text("إجمالي الرصيد المتوفر", style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
-                  const Text("1,250,000 YER", style: TextStyle(color: Colors.black, fontSize: 28, fontWeight: FontWeight.black)),
+                  // تصحيح FontWeight هنا
+                  const Text("1,250,000 YER", style: TextStyle(color: Colors.black, fontSize: 28, fontWeight: FontWeight.w900)),
                   const SizedBox(height: 5),
                   const Text("≈ 2,100 USD", style: TextStyle(color: Colors.black45, fontSize: 14)),
                   const SizedBox(height: 20),
@@ -56,8 +57,8 @@ class WalletScreen extends StatelessWidget {
             const Text("آخر العمليات", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 15),
             
-            // قائمة العمليات الحقيقية
-            _transactionItem("بيع: شاص 2024", "+ 35,000 $", "منذ ساعتين", Colors.green),
+            // تصحيح رمز الدولار بإضافة \ قبله
+            _transactionItem("بيع: شاص 2024", "+ 35,000 \$", "منذ ساعتين", Colors.green),
             _transactionItem("شحن رصيد: كريمي", "+ 50,000 YER", "أمس", Colors.green),
             _transactionItem("رسوم إعلان مميز", "- 5,000 YER", "3 مارس", Colors.redAccent),
             _transactionItem("سحب رصيد: النجم", "- 100,000 YER", "1 مارس", Colors.redAccent),
