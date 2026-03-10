@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong2.dart';
+// ملاحظة: قمنا بإزالة imports الخرائط مؤقتاً لتبسيط الكود لغرض الواجهة
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,45 +11,76 @@ void main() async {
   runApp(const FlexYemenApp());
 }
 
-class FlexYemenApp extends StatefulWidget {
+class FlexYemenApp extends StatelessWidget {
   const FlexYemenApp({super.key});
   @override
-  State<FlexYemenApp> createState() => _FlexYemenAppState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: const Color(0xFFD4AF37),
+        scaffoldBackgroundColor: Colors.black,
+      ),
+      home: const MainScreen(),
+    );
+  }
 }
 
-class _FlexYemenAppState extends State<FlexYemenApp> {
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  
   final List<Widget> _pages = [
     const HomeScreen(),
     const MapScreen(),
     const StoreScreen(),
+    const PostAdScreen(), // شاشة إضافة الإعلان
     const WalletScreen(),
-    const ChatListScreen(),
     const ProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        primaryColor: const Color(0xFFD4AF37),
-        scaffoldBackgroundColor: Colors.black,
-      ),
-      home: Scaffold(
-        body: _pages[_selectedIndex],
-        bottomNavigationBar: BottomNavigationBar(
+    return Scaffold(
+      body: _pages[_selectedIndex],
+      // --- الشريط السفلي المدمج بـ 6 أزرار ---
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFF1A1A1A), // لون الشريط
+          border: Border(top: BorderSide(color: Colors.white10, width: 0.5)),
+        ),
+        child: BottomNavigationBar(
           currentIndex: _selectedIndex,
           onTap: (index) => setState(() => _selectedIndex = index),
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: const Color(0xFFD4AF37),
-          backgroundColor: const Color(0xFF1A1A1A),
+          type: BottomNavigationBarType.fixed, // لتوزيع الأزرار بالتساوي
+          backgroundColor: Colors.transparent, // شفاف لأن الكونتينر يحمل اللون
+          selectedItemColor: const Color(0xFFD4AF37), // اللون الذهبي للنشط
+          unselectedItemColor: Colors.grey,
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
+          selectedLabelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+          unselectedLabelStyle: const TextStyle(fontSize: 10),
+          elevation: 0,
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
-            BottomNavigationBarItem(icon: Icon(Icons.map), label: 'الخريطة'),
-            BottomNavigationBarItem(icon: Icon(Icons.store), label: 'المتجر'),
-            BottomNavigationBarItem(icon: Icon(Icons.wallet), label: 'المحفظة'),
-            BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'الدردشة'),
+            BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'الرئيسية'),
+            BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'الخريطة'),
+            BottomNavigationBarItem(icon: Icon(Icons.grid_view_rounded), label: 'المتجر'),
+            BottomNavigationBarItem(
+              // تمييز زر الإضافة بلون مختلف كما في الصورة
+              icon: CircleAvatar(
+                backgroundColor: Color(0xFFD4AF37), 
+                radius: 18, 
+                child: Icon(Icons.add_rounded, color: Colors.black, size: 24)
+              ), 
+              label: 'إضافة'
+            ),
+            BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: 'المحفظة'),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'حسابي'),
           ],
         ),
@@ -59,31 +89,17 @@ class _FlexYemenAppState extends State<FlexYemenApp> {
   }
 }
 
-// --- كل الشاشات مدمجة هنا لضمان نجاح البناء ---
-
+// --- تعريف الشاشات ---
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text("فلكس يمن - الرئيسية", style: TextStyle(color: Color(0xFFD4AF37), fontSize: 20))));
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text("فلكس يمن - الرئيسية")));
 }
 
 class MapScreen extends StatelessWidget {
   const MapScreen({super.key});
   @override
-  Widget build(BuildContext context) {
-    return FlutterMap(
-      options: MapOptions(
-        initialCenter: LatLng(15.3521, 44.2163), // صنعاء بدون const
-        initialZoom: 13.0,
-      ),
-      children: [
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.flex_yemen.ultimatex',
-        ),
-      ],
-    );
-  }
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text("خريطة اليمن")));
 }
 
 class StoreScreen extends StatelessWidget {
@@ -92,16 +108,16 @@ class StoreScreen extends StatelessWidget {
   Widget build(BuildContext context) => const Scaffold(body: Center(child: Text("المتجر الشامل")));
 }
 
+class PostAdScreen extends StatelessWidget {
+  const PostAdScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text("واجهة إضافة إعلان جديد")));
+}
+
 class WalletScreen extends StatelessWidget {
   const WalletScreen({super.key});
   @override
   Widget build(BuildContext context) => const Scaffold(body: Center(child: Text("المحفظة الرقمية")));
-}
-
-class ChatListScreen extends StatelessWidget {
-  const ChatListScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text("قائمة الدردشات")));
 }
 
 class ProfileScreen extends StatelessWidget {
