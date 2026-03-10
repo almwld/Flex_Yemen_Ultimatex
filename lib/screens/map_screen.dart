@@ -11,8 +11,8 @@ class MapScreen extends StatelessWidget {
 
     return Scaffold(
       body: FlutterMap(
-        options: const MapOptions(
-          initialCenter: LatLng(15.3521, 44.2163), // صنعاء
+        options: MapOptions(
+          initialCenter: LatLng(15.3521, 44.2163), // إحداثيات صنعاء بدون const
           initialZoom: 13.0,
         ),
         children: [
@@ -24,10 +24,10 @@ class MapScreen extends StatelessWidget {
           MarkerLayer(
             markers: [
               Marker(
-                point: const LatLng(15.3521, 44.2163),
+                point: LatLng(15.3521, 44.2163),
                 width: 80,
                 height: 80,
-                child: const Icon(Icons.location_on, color: Color(0xFFD4AF37), size: 45),
+                child: const Icon(Icons.location_on, color: Color(0xFFFFD700), size: 45),
               ),
             ],
           ),
