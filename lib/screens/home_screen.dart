@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as slider; // اللقب لمنع التضارب
 import '../core/constants.dart';
-import 'product_details_screen.dart'; // استيراد شاشة التفاصيل
+import 'product_details_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,7 +12,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentSlide = 0;
-  final CarouselController _controller = CarouselController();
+  // نستخدم slider.CarouselController هنا
+  final slider.CarouselController _controller = slider.CarouselController();
 
   final List<Map<String, String>> _sliderItems = [
     {
@@ -61,10 +62,11 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             _buildSearchBar(),
-            CarouselSlider(
+            // نستخدم slider.CarouselSlider و slider.CarouselOptions
+            slider.CarouselSlider(
               items: _sliderItems.map((item) => _buildSliderCard(item)).toList(),
               carouselController: _controller,
-              options: CarouselOptions(
+              options: slider.CarouselOptions(
                 height: 200,
                 autoPlay: true,
                 enlargeCenterPage: true,
@@ -124,8 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // بقية المكونات المساعدة...
-  Widget _buildSearchBar() => Padding(padding: const EdgeInsets.all(15), child: Container(height: 50, decoration: BoxDecoration(color: AppColors.darkGrey, borderRadius: BorderRadius.circular(10)), child: const Center(child: Text("ابحث في فلكس يمن..."))));
+  Widget _buildSearchBar() => Padding(padding: const EdgeInsets.all(15), child: Container(height: 50, decoration: BoxDecoration(color: AppColors.darkGrey, borderRadius: BorderRadius.circular(10)), child: const Center(child: Text("ابحث في فلكس يمن...", style: TextStyle(color: Colors.grey)))));
   Widget _buildDotsIndicator() => Row(mainAxisAlignment: MainAxisAlignment.center, children: _sliderItems.asMap().entries.map((e) => Container(width: 8, height: 8, margin: const EdgeInsets.all(4), decoration: BoxDecoration(shape: BoxShape.circle, color: _currentSlide == e.key ? AppColors.gold : Colors.grey))).toList());
   Widget _buildSectionHeader(String t) => Padding(padding: const EdgeInsets.all(15), child: Text(t, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)));
   Widget _buildCategoryGrid() => Container(height: 100, color: AppColors.darkGrey, margin: const EdgeInsets.all(15), child: const Center(child: Text("شبكة الأقسام")));
