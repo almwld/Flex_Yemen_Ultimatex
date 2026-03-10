@@ -34,14 +34,14 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 4; // افتراضي على الدردشة للعرض
+  int _selectedIndex = 4; // افتراضي على الدردشة
   final List<Widget> _pages = [
-    const HomeScreen(),
-    const MapScreen(),
-    const StoreScreen(),
-    const PostAdScreen(),
-    const ChatListScreen(), // واجهة قائمة المحادثات
-    const ProfileScreen(),
+    const Center(child: Text("الرئيسية")),
+    const Center(child: Text("الخريطة")),
+    const Center(child: Text("المتجر")),
+    const Center(child: Text("إضافة")),
+    const ChatRoomScreen(), // الغرفة الحقيقية
+    const Center(child: Text("حسابي")),
   ];
 
   @override
@@ -74,49 +74,110 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-// --- واجهة قائمة الدردشات (Chat List) ---
-class ChatListScreen extends StatelessWidget {
-  const ChatListScreen({super.key});
+class ChatRoomScreen extends StatelessWidget {
+  const ChatRoomScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("المحادثات", style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.black,
-        elevation: 0,
-      ),
-      body: ListView.separated(
-        itemCount: 5,
-        separatorBuilder: (context, index) => const Divider(color: Colors.white10, height: 1),
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: const CircleAvatar(
-              backgroundImage: NetworkImage("https://ui-avatars.com/api/?name=User&background=D4AF37&color=000"),
-            ),
-            title: Text("أبو محمد الصنعاني ${index + 1}", style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: const Text("كم السعر النهائي للجنبية؟", style: TextStyle(color: Colors.grey, fontSize: 13)),
-            trailing: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("10:30 ص", style: TextStyle(color: Colors.grey, fontSize: 10)),
-                const SizedBox(height: 5),
-                if (index == 0) Container(padding: const EdgeInsets.all(6), decoration: const BoxDecoration(color: Color(0xFFD4AF37), shape: BoxShape.circle), child: const Text("1", style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold))),
+        backgroundColor: const Color(0xFF1A1A1A),
+        leading: const IconButton(icon: Icon(Icons.arrow_back_ios, color: Color(0xFFD4AF37)), onPressed: null),
+        title: Row(
+          children: [
+            const CircleAvatar(radius: 18, backgroundImage: NetworkImage("https://ui-avatars.com/api/?name=Sana&background=D4AF37&color=000")),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text("أبو محمد الصنعاني", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                Text("متصل الآن", style: TextStyle(fontSize: 10, color: Colors.greenAccent)),
               ],
             ),
-            onTap: () {
-              // هنا ننتقل لصفحة الدردشة المفصلة
-            },
-          );
-        },
+          ],
+        ),
+        actions: [
+          IconButton(icon: const Icon(Icons.phone_outlined, color: Color(0xFFD4AF37)), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.more_vert, color: Colors.grey), onPressed: () {}),
+        ],
+      ),
+      body: Column(
+        children: [
+          // قائمة الرسائل
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(15),
+              children: [
+                _buildMessage("السلام عليكم، كم السعر النهائي للجنبية؟", false, "10:00 ص"),
+                _buildMessage("وعليكم السلام، السعر 45,000 ريال يمني.", true, "10:02 ص"),
+                _buildMessage("هل هي صيفاني أصلي؟", false, "10:05 ص"),
+                _buildMessage("نعم، صيفاني قديم جداً ومضمون.", true, "10:06 ص"),
+              ],
+            ),
+          ),
+          // شريط الإدخال
+          _buildChatInput(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessage(String text, bool isMe, String time) {
+    return Align(
+      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        constraints: const BoxConstraints(maxWidth: 280),
+        decoration: BoxDecoration(
+          color: isMe ? const Color(0xFFD4AF37).withOpacity(0.2) : const Color(0xFF1A1A1A),
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(15),
+            topRight: const Radius.circular(15),
+            bottomLeft: Radius.circular(isMe ? 15 : 0),
+            bottomRight: Radius.circular(isMe ? 0 : 15),
+          ),
+          border: Border.all(color: isMe ? const Color(0xFFD4AF37) : Colors.white10, width: 0.5),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(text, style: const TextStyle(color: Colors.white, fontSize: 14)),
+            const SizedBox(height: 5),
+            Text(time, style: const TextStyle(color: Colors.grey, fontSize: 10), textAlign: TextAlign.right),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChatInput() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      decoration: const BoxDecoration(
+        color: Color(0xFF1A1A1A),
+        border: Border(top: BorderSide(color: Colors.white10)),
+      ),
+      child: Row(
+        children: [
+          IconButton(icon: const Icon(Icons.add_circle_outline, color: Color(0xFFD4AF37)), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.camera_alt_outlined, color: Colors.grey), onPressed: () {}),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(25)),
+              child: const TextField(
+                decoration: InputDecoration(hintText: "اكتب رسالتك...", border: InputBorder.none, hintStyle: TextStyle(fontSize: 14)),
+              ),
+            ),
+          ),
+          const SizedBox(width: 5),
+          CircleAvatar(
+            backgroundColor: const Color(0xFFD4AF37),
+            child: const IconButton(icon: Icon(Icons.send_rounded, color: Colors.black), onPressed: null),
+          ),
+        ],
       ),
     );
   }
 }
-
-// الشاشات الأخرى مؤقتاً
-class HomeScreen extends StatelessWidget { const HomeScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("الرئيسية")); }
-class MapScreen extends StatelessWidget { const MapScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("الخريطة")); }
-class StoreScreen extends StatelessWidget { const StoreScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("المتجر")); }
-class PostAdScreen extends StatelessWidget { const PostAdScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("إضافة إعلان")); }
-class ProfileScreen extends StatelessWidget { const ProfileScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text("حسابي")); }
