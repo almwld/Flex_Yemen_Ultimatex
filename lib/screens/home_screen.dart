@@ -1,6 +1,7 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import '../core/constants.dart';
+import 'product_details_screen.dart'; // استيراد شاشة التفاصيل
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,43 +11,41 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-  late Timer _timer;
+  int _currentSlide = 0;
+  final CarouselController _controller = CarouselController();
 
   final List<Map<String, String>> _sliderItems = [
-    {'title': 'عروض العقارات الحصرية', 'sub': 'فلل وأراضي في أرقى أحياء صنعاء', 'color': '0xFF1E3A8A'},
-    {'title': 'تنزيلات الأسواق', 'icon': '🛍️', 'sub': 'خصومات تصل إلى 40% على الإلكترونيات', 'color': '0xFFB8860B'},
-    {'title': 'مزاد الجنابي الكبرى', 'sub': 'اشترك الآن في أقوى مزادات الموسم', 'color': '0xFF7F1D1D'},
-    {'title': 'سوق السيارات الحديثة', 'sub': 'أحدث الموديلات بأسعار منافسة', 'color': '0xFF14532D'},
-    {'title': 'قسم النوادر والتحف', 'sub': 'قطع أثرية وجنابي صيفاني أصلية', 'color': '0xFF4C1D95'},
+    {
+      'title': 'عروض العقارات الحصرية',
+      'sub': 'فلل وأراضي في أرقى أحياء صنعاء',
+      'image': 'https://img.freepik.com/free-photo/modern-residential-district-with-luxury-houses_23-2148967912.jpg',
+      'price': 'تفاوض'
+    },
+    {
+      'title': 'تنزيلات الأسواق الأسبوعية',
+      'sub': 'خصومات تصل إلى 50% على الإلكترونيات',
+      'image': 'https://img.freepik.com/free-photo/shopping-concept-cart-with-bags_23-2148161559.jpg',
+      'price': 'عروض'
+    },
+    {
+      'title': 'مزاد الجنابي الكبرى',
+      'sub': 'اشترك الآن في أقوى مزادات الموسم',
+      'image': 'https://img.freepik.com/premium-photo/traditional-yemeni-jambiya-dagger-dagger-is-decorative-with-intricate-patterns_713651-124.jpg',
+      'price': 'مزاد'
+    },
+    {
+      'title': 'سوق السيارات الحديثة',
+      'sub': 'أحدث الموديلات بأسعار منافسة',
+      'image': 'https://img.freepik.com/free-photo/front-view-generic-brandless-suv-car_1101-2098.jpg',
+      'price': '35,000 \$'
+    },
+    {
+      'title': 'قسم النوادر والتحف',
+      'sub': 'قطع أثرية أصلية ونادرة',
+      'image': 'https://img.freepik.com/free-photo/antique-gold-clock_23-2147983617.jpg',
+      'price': 'نادر'
+    },
   ];
-
-  @override
-  void initState() {
-    super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 4), (Timer timer) {
-      if (_currentPage < 4) {
-        _currentPage++;
-      } else {
-        _currentPage = 0;
-      }
-      if (_pageController.hasClients) {
-        _pageController.animateToPage(
-          _currentPage,
-          duration: const Duration(milliseconds: 800),
-          curve: Curves.easeInOutSine,
-        );
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    _pageController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,169 +56,77 @@ class _HomeScreenState extends State<HomeScreen> {
         leading: const Icon(Icons.settings_outlined, color: AppColors.gold),
         title: const Text("FLEX YEMEN", style: TextStyle(color: AppColors.gold, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
         centerTitle: true,
-        actions: [
-          const Icon(Icons.shopping_bag_outlined, color: AppColors.gold),
-          const SizedBox(width: 15),
-          const Icon(Icons.wb_sunny_outlined, color: AppColors.gold),
-          const SizedBox(width: 15),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 1. شريط البحث
             _buildSearchBar(),
-
-            // 2. السلايدر المتحرك (5 سلايدر)
-            SizedBox(
-              height: 160,
-              child: PageView.builder(
-                controller: _pageController,
-                onPageChanged: (int page) => setState(() => _currentPage = page),
-                itemCount: _sliderItems.length,
-                itemBuilder: (context, index) {
-                  return _buildSliderCard(_sliderItems[index]);
-                },
+            CarouselSlider(
+              items: _sliderItems.map((item) => _buildSliderCard(item)).toList(),
+              carouselController: _controller,
+              options: CarouselOptions(
+                height: 200,
+                autoPlay: true,
+                enlargeCenterPage: true,
+                onPageChanged: (index, reason) => setState(() => _currentSlide = index),
               ),
             ),
-            
-            // مؤشر السلايدر (Dots)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(_sliderItems.length, (index) => _buildDot(index)),
-            ),
-
+            _buildDotsIndicator(),
             const SizedBox(height: 20),
-
-            // 3. الأقسام (العقارات) كما في طلبك السابق
             _buildSectionHeader("🏠 العقارات والاستثمارات"),
-            _buildCategoryGrid([
-              {'title': 'أراضي استثمارية', 'icon': Icons.stars, 'color': Colors.blue},
-              {'title': 'فلل للبيع', 'icon': Icons.stars, 'color': Colors.blue},
-              {'title': 'شقق للإيجار', 'icon': Icons.stars, 'color': Colors.blue},
-            ]),
-
-            _buildSectionHeader("🔥 المزادات الحية"),
-            _buildAuctionGrid(),
+            _buildCategoryGrid(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSearchBar() {
-    return Padding(
-      padding: const EdgeInsets.all(15),
+  Widget _buildSliderCard(Map<String, String> item) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetailsScreen(
+              title: item['title']!,
+              price: item['price']!, 
+              image: item['image']!,
+            ),
+          ),
+        );
+      },
       child: Container(
-        decoration: BoxDecoration(color: AppColors.darkGrey, borderRadius: BorderRadius.circular(10)),
-        child: const TextField(
-          textAlign: TextAlign.right,
-          decoration: InputDecoration(
-            hintText: "ابحث عن عقارات، سيارات، مزادات...",
-            prefixIcon: Icon(Icons.search, color: AppColors.gold),
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          image: DecorationImage(image: NetworkImage(item['image']!), fit: BoxFit.cover),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [Colors.black.withOpacity(0.8), Colors.transparent],
+            ),
+          ),
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(item['title']!, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(item['sub']!, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildSliderCard(Map<String, String> item) {
-    return Container(
-      margin: const EdgeInsets.all(15),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Color(int.parse(item['color']!)),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 5))],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(item['title']!, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text(item['sub']!, style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 13)),
-          const SizedBox(height: 15),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-            decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(10)),
-            child: const Text("تصفح الآن", style: TextStyle(color: Colors.white, fontSize: 10)),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDot(int index) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      margin: const EdgeInsets.only(right: 5),
-      height: 6,
-      width: _currentPage == index ? 20 : 6,
-      decoration: BoxDecoration(
-        color: _currentPage == index ? AppColors.gold : Colors.grey,
-        borderRadius: BorderRadius.circular(3),
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text("عرض الكل", style: TextStyle(color: AppColors.gold, fontSize: 12)),
-          Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategoryGrid(List<Map<String, dynamic>> items) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 1.1),
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        return Container(
-          margin: const EdgeInsets.all(5),
-          decoration: BoxDecoration(color: AppColors.darkGrey, borderRadius: BorderRadius.circular(15), border: Border.all(color: Colors.white10)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(items[index]['icon'], color: items[index]['color'], size: 25),
-              const SizedBox(height: 8),
-              Text(items[index]['title'], textAlign: TextAlign.center, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildAuctionGrid() {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        children: [
-          Expanded(child: _buildSmallAuctionCard("شاص 2024", "35k \$")),
-          const SizedBox(width: 10),
-          Expanded(child: _buildSmallAuctionCard("جنبية صيفاني", "5k \$")),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSmallAuctionCard(String t, String p) {
-    return Container(
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(color: AppColors.darkGrey, borderRadius: BorderRadius.circular(15)),
-      child: Column(children: [Text(t), Text(p, style: const TextStyle(color: AppColors.gold))]),
-    );
-  }
+  // بقية المكونات المساعدة...
+  Widget _buildSearchBar() => Padding(padding: const EdgeInsets.all(15), child: Container(height: 50, decoration: BoxDecoration(color: AppColors.darkGrey, borderRadius: BorderRadius.circular(10)), child: const Center(child: Text("ابحث في فلكس يمن..."))));
+  Widget _buildDotsIndicator() => Row(mainAxisAlignment: MainAxisAlignment.center, children: _sliderItems.asMap().entries.map((e) => Container(width: 8, height: 8, margin: const EdgeInsets.all(4), decoration: BoxDecoration(shape: BoxShape.circle, color: _currentSlide == e.key ? AppColors.gold : Colors.grey))).toList());
+  Widget _buildSectionHeader(String t) => Padding(padding: const EdgeInsets.all(15), child: Text(t, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)));
+  Widget _buildCategoryGrid() => Container(height: 100, color: AppColors.darkGrey, margin: const EdgeInsets.all(15), child: const Center(child: Text("شبكة الأقسام")));
 }
