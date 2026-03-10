@@ -1,13 +1,18 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong2.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // --- استخدام المفاتيح الصحيحة التي زودتني بها ---
   await Supabase.initialize(
-    url: 'https://efbc36e3fdd1428c96d0.supabase.co',
-    anonKey: 'efbc36e3-fdd1-428c-a96d-0dd8038fadb1',
+    url: 'https://ziqpohdxtemsmunnhlkm.supabase.co', // تم استخراجه من الـ JWT الخاص بك
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppcXBvaGR4dGVtc211bm5obGttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3ODQzNDcsImV4cCI6MjA4NzM2MDM0N30.ABAg5YZSrrAtBTWATJ3eRTmo4BuZVyVlrMV1HZjRWs0',
   );
+  
   runApp(const FlexYemenApp());
 }
 
@@ -34,13 +39,14 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 4; // افتراضي على الدردشة
+  int _selectedIndex = 4; // نبدأ من الدردشة للتأكد من الواجهة الحقيقية
+  
   final List<Widget> _pages = [
     const Center(child: Text("الرئيسية")),
-    const Center(child: Text("الخريطة")),
+    const MapViewWidget(),
     const Center(child: Text("المتجر")),
-    const Center(child: Text("إضافة")),
-    const ChatRoomScreen(), // الغرفة الحقيقية
+    const Center(child: Text("إضافة إعلان")),
+    const ChatRoomScreen(),
     const Center(child: Text("حسابي")),
   ];
 
@@ -82,102 +88,83 @@ class ChatRoomScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
-        leading: const IconButton(icon: Icon(Icons.arrow_back_ios, color: Color(0xFFD4AF37)), onPressed: null),
-        title: Row(
-          children: [
-            const CircleAvatar(radius: 18, backgroundImage: NetworkImage("https://ui-avatars.com/api/?name=Sana&background=D4AF37&color=000")),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text("أبو محمد الصنعاني", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                Text("متصل الآن", style: TextStyle(fontSize: 10, color: Colors.greenAccent)),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(icon: const Icon(Icons.phone_outlined, color: Color(0xFFD4AF37)), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.more_vert, color: Colors.grey), onPressed: () {}),
-        ],
+        title: const Text("أبو محمد الصنعاني", style: TextStyle(color: Color(0xFFD4AF37))),
+        actions: [IconButton(icon: const Icon(Icons.location_on_outlined, color: Color(0xFFD4AF37)), onPressed: () {})],
       ),
       body: Column(
         children: [
-          // قائمة الرسائل
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(15),
               children: [
-                _buildMessage("السلام عليكم، كم السعر النهائي للجنبية؟", false, "10:00 ص"),
-                _buildMessage("وعليكم السلام، السعر 45,000 ريال يمني.", true, "10:02 ص"),
-                _buildMessage("هل هي صيفاني أصلي؟", false, "10:05 ص"),
-                _buildMessage("نعم، صيفاني قديم جداً ومضمون.", true, "10:06 ص"),
+                _messageBubble("السلام عليكم، أين موقع المحل؟", false),
+                _locationBubble("موقعنا في صنعاء - شارع حدة", "15.3211, 44.2012"),
+                _messageBubble("تمام، سأصل إليكم خلال ساعة بإذن الله.", true),
               ],
             ),
           ),
-          // شريط الإدخال
-          _buildChatInput(),
+          _inputArea(),
         ],
       ),
     );
   }
 
-  Widget _buildMessage(String text, bool isMe, String time) {
+  Widget _messageBubble(String text, bool isMe) {
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5),
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        constraints: const BoxConstraints(maxWidth: 280),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isMe ? const Color(0xFFD4AF37).withOpacity(0.2) : const Color(0xFF1A1A1A),
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(15),
-            topRight: const Radius.circular(15),
-            bottomLeft: Radius.circular(isMe ? 15 : 0),
-            bottomRight: Radius.circular(isMe ? 0 : 15),
-          ),
-          border: Border.all(color: isMe ? const Color(0xFFD4AF37) : Colors.white10, width: 0.5),
+          color: isMe ? const Color(0x33D4AF37) : const Color(0xFF1A1A1A),
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: isMe ? const Color(0xFFD4AF37) : Colors.white10),
         ),
+        child: Text(text),
+      ),
+    );
+  }
+
+  Widget _locationBubble(String label, String coords) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        width: 200,
+        decoration: BoxDecoration(color: const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(15), border: Border.all(color: Colors.white10)),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(text, style: const TextStyle(color: Colors.white, fontSize: 14)),
-            const SizedBox(height: 5),
-            Text(time, style: const TextStyle(color: Colors.grey, fontSize: 10), textAlign: TextAlign.right),
+            Container(height: 100, color: Colors.white10, child: const Icon(Icons.map, color: Color(0xFFD4AF37))),
+            Padding(padding: const EdgeInsets.all(8.0), child: Text(label, style: const TextStyle(fontSize: 12))),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildChatInput() {
+  Widget _inputArea() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1A1A1A),
-        border: Border(top: BorderSide(color: Colors.white10)),
-      ),
+      padding: const EdgeInsets.all(10),
+      color: const Color(0xFF1A1A1A),
       child: Row(
         children: [
-          IconButton(icon: const Icon(Icons.add_circle_outline, color: Color(0xFFD4AF37)), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.camera_alt_outlined, color: Colors.grey), onPressed: () {}),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(25)),
-              child: const TextField(
-                decoration: InputDecoration(hintText: "اكتب رسالتك...", border: InputBorder.none, hintStyle: TextStyle(fontSize: 14)),
-              ),
-            ),
-          ),
-          const SizedBox(width: 5),
-          CircleAvatar(
-            backgroundColor: const Color(0xFFD4AF37),
-            child: const IconButton(icon: Icon(Icons.send_rounded, color: Colors.black), onPressed: null),
-          ),
+          const Expanded(child: TextField(decoration: InputDecoration(hintText: "اكتب هنا...", border: InputBorder.none))),
+          IconButton(icon: const Icon(Icons.send, color: Color(0xFFD4AF37)), onPressed: () {}),
         ],
       ),
+    );
+  }
+}
+
+class MapViewWidget extends StatelessWidget {
+  const MapViewWidget({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return FlutterMap(
+      options: MapOptions(initialCenter: LatLng(15.3521, 44.2163), initialZoom: 13),
+      children: [
+        TileLayer(urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
+      ],
     );
   }
 }
