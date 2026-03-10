@@ -1,20 +1,20 @@
 name: flex_yemen_ultimatex
-description: Flex Yemen Ultimate Marketplace
-version: 1.0.2+3
-publish_to: 'none'
+description: "A professional Yemeni auction and marketplace platform."
+version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.2.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
-  supabase_flutter: ^2.10.2
+  
+  # المكتبات المطلوبة التي أضفناها يدوياً
+  supabase_flutter: ^2.0.2
+  carousel_slider: ^4.2.1
   flutter_map: ^6.1.0
-  latlong2: ^0.9.1
-  image_picker: ^1.0.7
-  http: ^1.2.1  # تم التحديث لحل التعارض
+  latlong2: ^0.9.0
 
 dev_dependencies:
   flutter_test:
